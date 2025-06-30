@@ -1,106 +1,87 @@
-# Realized_Vol_pred
 🧠 **HVGRU Volatility Prediction Engine**
 
 🎯 **Objective**
-This engine employs a two-stage training GRU neural network (HVGRU) model to dynamically forecast future volatility measures for cryptocurrencies such as Bitcoin. It specifically predicts volatility metrics using Close-to-Close (CC) and Parkinson estimators over a defined forecast horizon.
+This engine employs a two-stage GRU neural network (HVGRU) with rolling-window backtesting to forecast future volatility (5-day horizon) for cryptocurrencies. It specifically predicts volatility metrics using two estimators: Close-to-Close (CC) and Parkinson.
 
 📁 **Input Data Format**
 The input CSV file must contain these columns:
 
 * `date`: Trading date (YYYY-MM-DD)
-* `open`, `high`, `low`, `close`: Daily OHLC prices
+* `open`, `high`, `low`, `close`: OHLC prices
 * `volume usdt`: Trading volume in USDT
-* `iv`: Implied volatility (scaled to \[0,1])
+* `iv`: Implied volatility (scaled 0-1)
 * `fear_index`: Market fear index
 
 🔍 **Preprocessing**
 
-* Datetime Parsing: Convert `date` to datetime index and sort in ascending order.
-* Volume Spike Transformation: Calculate the 10-day rolling mean and apply log-transformation.
+* Datetime Parsing: Convert `date` to datetime index and sort ascendingly.
+* Volume Spike Transformation: Compute 10-day rolling mean and apply log transformation.
 
-🏗️ Feature Engineering
+🏗️ **Feature Engineering**
 
-*Rolling Standardization (Z-score)
+* **Rolling Standardization (Z-score)**
 
-Features:
+  * Features:
 
-*hvH_lag: Historical volatility lagged by one day.
+    * `hvH_lag`: Historical volatility lagged by one day.
+    * `hl_pct_log`: Intraday price volatility (log high-low percentage).
+    * `fear_index`: Market sentiment indicator.
+    * `oc_ret`: Open-to-close daily return.
+    * `vol_spike_10`: Log-transformed volume spike ratio (current vs. 10-day average).
+  * Window: `PRICE_WINDOW = 60` days
 
-*hl_pct_log: Intraday price volatility (log high-low percentage).
+* **Static Standardization**
 
-*fear_index: Market sentiment indicator.
+  * Features:
 
-*oc_ret: Open-to-close daily return.
+    * `iv`: Implied volatility from market expectations.
+    * `skewH`: Skewness of returns over recent horizon.
+    * `kurtH`: Kurtosis of returns over recent horizon.
+  * Normalization parameters calculated solely from the training subset within each rolling window.
 
-*vol_spike_10: Log-transformed volume spike ratio (current vs. 10-day average).
+* **Raw Features**
 
-Window: PRICE_WINDOW = 60 days
+  * Features:
 
-*Static Standardization
-
-*Features:
-
-*iv: Implied volatility from market expectations.
-
-*skewH: Skewness of returns over recent horizon.
-
-*kurtH: Kurtosis of returns over recent horizon.
-
-Normalization parameters calculated solely from the training subset within each rolling window.
-
-*Raw Features
-
-Features:
-
-*ret1_z: Z-score standardized daily return.
-
-*ret3_z: Z-score standardized 3-day cumulative return.
-
-Included without additional transformations.
+    * `ret1_z`: Z-score standardized daily return.
+    * `ret3_z`: Z-score standardized 3-day cumulative return.
+  * Included without additional transformations.
 
 🪟 **Sliding Window & Sample Construction**
 
-* **Key Parameters**
+* **Parameters:**
 
-  * `train_window_days = 960`: Historical lookback period
-  * `seq_len = 60`: GRU input sequence length
-  * `PRICE_WINDOW = 60`: Rolling normalization window
-  * `horizon = 5`: Predict future 5-day volatility
+  * Training window (`train_window_days`): 960 days
+  * GRU input sequence length (`seq_len`): 60 days
+  * Prediction horizon (`horizon`): 5 days
 
 
 🧪 **Dataset Splitting (per window)**
 
-* Initial split (Stage 1):
+* Stage 1:
 
-  * Training set: First 90% of samples
-  * Validation set: Last 10% for EarlyStopping
-  * 
-* Final training (Stage 2): Entire window re-trained using optimal epoch determined in Stage 1.
+  * Training: 90%, Validation: 10% (Early Stopping)
+* Stage 2:
+
+  * Retrain on entire dataset using best epoch from Stage 1 + 5 additional epochs.
 
 🧠 **Model Training**
 
-* **Architecture**
+* **Architecture**:
 
-  * Two-layer GRU
-  * LayerNorm and two-layer MLP head
-  * Single-value output (volatility forecast)
-
-* **Loss Function**
+  * Two-layer GRU → LayerNorm → two-layer MLP → single-value output
+* **Loss Function**:
 
   * Smooth L1 Loss (Huber Loss)
+* **Optimization**:
 
-* **Optimization**
-
-  * Optimizer: AdamW (learning rate = 3e-4)
-  * LR Scheduler: ReduceLROnPlateau, patience = 10
-  * EarlyStopping: patience = 12 epochs
+  * AdamW optimizer (LR = 3e-4)
+  * ReduceLROnPlateau scheduler, patience = 10
+  * EarlyStopping, patience = 12 epochs
 
 🔮 **Prediction & Evaluation**
 
-* **Inference**
-
-  * Model generates single-point forecasts for the future volatility
-* **Metrics**
+* **Metrics:**
 
   * Mean Absolute Error (MAE)
   * Median Absolute Error (MedAE)
@@ -124,7 +105,7 @@ def default_cfg():
 ```
 
 📌 **Execution**
-Run the script with your input CSV path and desired output path for results.
+Run the script with your input CSV path and desired output path:
 
 ```python
 if __name__ == "__main__":

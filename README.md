@@ -20,41 +20,41 @@ The input CSV file must contain these columns:
 
 🏗️ Feature Engineering
 
-Rolling Standardization (Z-score)
+*Rolling Standardization (Z-score)
 
 Features:
 
-hvH_lag: Historical volatility lagged by one day.
+*hvH_lag: Historical volatility lagged by one day.
 
-hl_pct_log: Intraday price volatility (log high-low percentage).
+*hl_pct_log: Intraday price volatility (log high-low percentage).
 
-fear_index: Market sentiment indicator.
+*fear_index: Market sentiment indicator.
 
-oc_ret: Open-to-close daily return.
+*oc_ret: Open-to-close daily return.
 
-vol_spike_10: Log-transformed volume spike ratio (current vs. 10-day average).
+*vol_spike_10: Log-transformed volume spike ratio (current vs. 10-day average).
 
 Window: PRICE_WINDOW = 60 days
 
-Static Standardization
+*Static Standardization
 
-Features:
+*Features:
 
-iv: Implied volatility from market expectations.
+*iv: Implied volatility from market expectations.
 
-skewH: Skewness of returns over recent horizon.
+*skewH: Skewness of returns over recent horizon.
 
-kurtH: Kurtosis of returns over recent horizon.
+*kurtH: Kurtosis of returns over recent horizon.
 
 Normalization parameters calculated solely from the training subset within each rolling window.
 
-Raw Features
+*Raw Features
 
 Features:
 
-ret1_z: Z-score standardized daily return.
+*ret1_z: Z-score standardized daily return.
 
-ret3_z: Z-score standardized 3-day cumulative return.
+*ret3_z: Z-score standardized 3-day cumulative return.
 
 Included without additional transformations.
 

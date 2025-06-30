@@ -18,20 +18,45 @@ The input CSV file must contain these columns:
 * Datetime Parsing: Convert `date` to datetime index and sort in ascending order.
 * Volume Spike Transformation: Calculate the 10-day rolling mean and apply log-transformation.
 
-🏗️ **Feature Engineering**
+🏗️ Feature Engineering
 
-* **Rolling Standardization (Z-score)**
+Rolling Standardization (Z-score)
 
-  * Features: `hvH_lag`, `hl_pct_log`, `fear_index`, `oc_ret`, `vol_spike_10`
-  * Window: `PRICE_WINDOW = 60` days
-* **Static Standardization**
+Features:
 
-  * Features: `iv`, `skewH`, `kurtH`
-  * Normalization parameters derived exclusively from the training set within each rolling window.
-* **Raw Features**
+hvH_lag: Historical volatility lagged by one day.
 
-  * Features: `ret1_z`, `ret3_z`
-  * Directly included without further transformations.
+hl_pct_log: Intraday price volatility (log high-low percentage).
+
+fear_index: Market sentiment indicator.
+
+oc_ret: Open-to-close daily return.
+
+vol_spike_10: Log-transformed volume spike ratio (current vs. 10-day average).
+
+Window: PRICE_WINDOW = 60 days
+
+Static Standardization
+
+Features:
+
+iv: Implied volatility from market expectations.
+
+skewH: Skewness of returns over recent horizon.
+
+kurtH: Kurtosis of returns over recent horizon.
+
+Normalization parameters calculated solely from the training subset within each rolling window.
+
+Raw Features
+
+Features:
+
+ret1_z: Z-score standardized daily return.
+
+ret3_z: Z-score standardized 3-day cumulative return.
+
+Included without additional transformations.
 
 🪟 **Sliding Window & Sample Construction**
 

@@ -1,9 +1,9 @@
-🧠 **HVGRU Volatility Prediction Engine**
+# HVGRU Volatility Prediction Engine
 
-🎯 **Objective**
+## Objective
 This engine employs a two-stage GRU neural network (HVGRU) with rolling-window backtesting to forecast future volatility (5-day horizon) for cryptocurrencies. It specifically predicts volatility metrics using two estimators: Close-to-Close (CC) and Parkinson.
 
-📁 **Input Data Format**
+## Input Data Format
 The input CSV file must contain these columns:
 
 * `date`: Trading date (YYYY-MM-DD)
@@ -12,12 +12,12 @@ The input CSV file must contain these columns:
 * `iv`: Implied volatility (scaled 0-1)
 * `fear_index`: Market fear index
 
-🔍 **Preprocessing**
+## Preprocessing
 
 * Datetime Parsing: Convert `date` to datetime index and sort ascendingly.
 * Volume Spike Transformation: Compute 10-day rolling mean and apply log transformation.
 
-🏗️ **Feature Engineering**
+## Feature Engineering
 
 * **Rolling Standardization (Z-score)**
 
@@ -47,7 +47,7 @@ The input CSV file must contain these columns:
     * `ret3_z`: Z-score standardized 3-day cumulative return.
   * Included without additional transformations.
 
-🪟 **Sliding Window & Sample Construction**
+## Sliding Window & Sample Construction
 
 * **Parameters:**
 
@@ -56,7 +56,7 @@ The input CSV file must contain these columns:
   * Prediction horizon (`horizon`): 5 days
 
 
-🧪 **Dataset Splitting (per window)**
+## Dataset Splitting (per window)
 
 * Stage 1:
 
@@ -65,7 +65,7 @@ The input CSV file must contain these columns:
 
   * Retrain on entire dataset using best epoch from Stage 1 + 5 additional epochs.
 
-🧠 **Model Training**
+## Model Training
 
 * **Architecture**:
 
@@ -79,7 +79,7 @@ The input CSV file must contain these columns:
   * ReduceLROnPlateau scheduler, patience = 10
   * EarlyStopping, patience = 12 epochs
 
-🔮 **Prediction & Evaluation**
+## Prediction & Evaluation
 
 * **Metrics:**
 
@@ -87,7 +87,7 @@ The input CSV file must contain these columns:
   * Median Absolute Error (MedAE)
   * Mean Absolute Percentage Error (MAPE)
 
-⚙️ **Default Configuration**
+## Default Configuration
 
 ```python
 def default_cfg():
@@ -104,7 +104,7 @@ def default_cfg():
     )
 ```
 
-📌 **Execution**
+## Execution
 Run the script with your input CSV path and desired output path:
 
 ```python

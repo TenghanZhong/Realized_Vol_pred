@@ -1,8 +1,8 @@
 """
-HV Interval‑Engine ★ Backtest Edition – Quantile GRU (rev. Indep‑Tail CQR)
+HV Interval Engine: quantile GRU with separate tail calibration
 --------------------------------------------------------------------------
-• 独立尾部 CQR 校准：左右误差各按 (1‑conf_lvl) 分位 → 区间不过宽。
-• 分位点范围收窄为 [0.10, 0.90]。
+• 独立尾部 CQR 校准：左右误差各按 (1‑conf_lvl) 分位。
+• 分位点范围为 [0.10, 0.90]。
 • 回测循环实时打印：date | true | [lo, hi] | mid。
 """
 

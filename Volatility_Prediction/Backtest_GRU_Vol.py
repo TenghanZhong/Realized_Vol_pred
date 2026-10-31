@@ -219,7 +219,7 @@ def backtest(path, cfg, out_path):
             # ——— 阶段二：全量重训 best_epoch 次 ———
 
             epochs_stage2 = best_epoch + 5
-            print(f"Stage2 共训练了 {epochs_stage2} 轮")  # 这里直接输出
+            print(f"Stage2 共训练了 {epochs_stage2} 轮")
             model = train_stage2(X, y, cfg, dev, epochs_stage2, static_idx, mu_s, sd_s)
 
             # 预测
